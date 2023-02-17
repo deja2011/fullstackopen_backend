@@ -1,7 +1,11 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
+morgan.token('body', (req) => {return JSON.stringify(req.body)})
+
 app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 persons = [
     {
@@ -55,7 +59,6 @@ app.delete('/api/person/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
-    console.log("body is", body)
     if (!body.name) {
       return response.status(400).json({ 
         error: 'name missing' 
